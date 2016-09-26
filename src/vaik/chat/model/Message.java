@@ -6,6 +6,7 @@ import vaik.chat.type.MessageType;
 public class Message {
 	private String prefix;
 	private String toUsers;
+	private String allUsers;
 	private String suffix;
 	private String body;
 	private String messageStr;
@@ -20,6 +21,7 @@ public class Message {
 
 	public Message(String message) {
 		this.messageStr = message;
+		setFields(message);
 	}
 	
 	public String getPrefix() {
@@ -53,11 +55,16 @@ public class Message {
 		this.messageStr = messageStr;
 	}
 	
-	public void setFields(String message){
+	private void setFields(String message){
 		if(message.startsWith(Constant.SOCKET_CONNECT)){
 			this.type = MessageType.Connect;
+			this.body =message.substring(Constant.SOCKET_CONNECT.length());
 		}else if (message.startsWith(Constant.SOCKET_DISCONNECT)){
 			this.type = MessageType.Disconnect;
+		}else if (message.startsWith(Constant.SOCKET_USER_LIST)){
+			this.type = MessageType.USERLIST;
+			this.allUsers = message.substring(Constant.SOCKET_USER_LIST.length());
+			
 		}else{
 			this.type = MessageType.Message;
 			if(message.startsWith(Constant.SOCKET_TO_FRONT)){
