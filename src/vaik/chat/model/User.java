@@ -29,4 +29,10 @@ public class User {
 	private int userId;
 	private String ip;
 	private int port;
+	@Override
+	public String toString() {
+		return this.userName;
+	}
+	
+	
 }

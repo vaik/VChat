@@ -53,6 +53,10 @@ public class Server {
 
 		private PrintWriter out;
 		private User user;
+		public User getUser() {
+			return user;
+		}
+
 		private boolean stop = false;
 
 		public ServerThread(Socket s) {
@@ -69,7 +73,7 @@ public class Server {
 				this.user = user;
 				servers.put(user.getUserId(), this);
 				out.println(Constant.SOCKET_CONNECT + user.getUserId());
-
+				sendUserList();
 				System.out.println(user.getUserName() + "[" + user.getIp() + ":" + user.getPort() + "]连接上了");
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -115,12 +119,14 @@ public class Server {
 			if (servers != null && servers.size() > 0) {
 				String userListStr = Constant.SOCKET_USER_LIST;
 				for (Integer st : servers.keySet()) {
-					userListStr += user.getUserName() + ":" + user.getUserId() + ",";
+					User tmpUser =servers.get(st).getUser();
+					userListStr += tmpUser.getUserName() + ":" + tmpUser.getUserId() + ",";
 				}
 				userListStr = userListStr.substring(0,userListStr.length()-1);
 				
 				for (Integer st : servers.keySet()) {
 					servers.get(st).getOut().println(userListStr);
+					System.out.println(userListStr);
 				}
 			}
 		}
@@ -136,7 +142,7 @@ public class Server {
 					if (message.getType() == MessageType.Disconnect) {
 						close();
 						break;
-					}else if(message.getType() == MessageType.USERLIST){
+					}else if(message.getType() == MessageType.UserList){
 						
 						continue;
 					}

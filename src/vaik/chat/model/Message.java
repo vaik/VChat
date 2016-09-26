@@ -1,5 +1,8 @@
 package vaik.chat.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import vaik.chat.constant.*;
 import vaik.chat.type.MessageType;
 
@@ -62,7 +65,7 @@ public class Message {
 		}else if (message.startsWith(Constant.SOCKET_DISCONNECT)){
 			this.type = MessageType.Disconnect;
 		}else if (message.startsWith(Constant.SOCKET_USER_LIST)){
-			this.type = MessageType.USERLIST;
+			this.type = MessageType.UserList;
 			this.allUsers = message.substring(Constant.SOCKET_USER_LIST.length());
 			
 		}else{
@@ -70,12 +73,32 @@ public class Message {
 			if(message.startsWith(Constant.SOCKET_TO_FRONT)){
 				this.prefix = Constant.SOCKET_TO_FRONT;
 				if(message.indexOf(Constant.SOCKET_TO_ENT) > 0 )this.suffix = Constant.SOCKET_TO_ENT;
-				this.toUsers = message.substring(Constant.SOCKET_TO_ENT.length(), message.indexOf(Constant.SOCKET_TO_ENT)-1-Constant.SOCKET_TO_ENT.length());
+				System.out.println(message);
+				this.toUsers = message.substring(Constant.SOCKET_TO_FRONT.length(), message.indexOf(Constant.SOCKET_TO_ENT));
+				System.out.println(this.toUsers);
 				this.body = message.substring(message.indexOf(Constant.SOCKET_TO_ENT)+Constant.SOCKET_TO_ENT.length());
 			}else{
 				this.body = message;
 			}
 		}
+	}
+	
+	public List<User> getAllUser(){
+		List<User> allUsers = null;
+		if(this.allUsers != null && this.allUsers.length() > 0){
+			String[] userStrs = this.allUsers.split(",");
+			if(userStrs.length > 0){
+				allUsers = new ArrayList<User>();
+				for (int i = 0; i < userStrs.length; i++) {
+					int index = userStrs[i].indexOf(":");
+					User user = new User();
+					user.setUserName(userStrs[i].substring(0,index));
+					user.setUserId(Integer.parseInt(userStrs[i].substring(index+1)));
+					allUsers.add(user);
+				}
+			}
+		}
+		return allUsers;
 	}
 	
 	public int[] getUserIds(){

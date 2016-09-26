@@ -1,5 +1,5 @@
 package vaik.chat.type;
 
 public enum MessageType {
-	Connect,Disconnect,Message,SysMessage,USERLIST
+	Connect,Disconnect,Message,SysMessage,UserList
 }

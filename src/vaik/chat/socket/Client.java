@@ -68,11 +68,11 @@ public class Client {
 					if (message.getType() == MessageType.Disconnect) {
 						close();
 						break;
-					}else if(message.getType() == MessageType.USERLIST){
+					}else if(message.getType() == MessageType.UserList){
 						chat.updateUserList(message);
-						continue;
+					}else{
+						chat.receive(message);
 					}
-					chat.receive(message);
 				}
 
 			} catch (IOException e) {
